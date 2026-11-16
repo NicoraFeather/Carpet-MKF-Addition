@@ -1,0 +1,28 @@
+# 验证记录与游戏验收
+
+## 已完成
+
+- 核对 Carpet tag 1.4.147 的 `CarpetExtension`、`SettingsManager` 和 `BlockRotator` 接口。
+- 核对 TIS 源码的 `versions/1.21.1/gradle.properties`：Minecraft 1.21.1 直接依赖 `carpet:fabric-carpet:1.21-1.4.147+v240613`，且声明支持 Minecraft 1.21 至 1.21.1。这支持当前依赖组合，不意味着两个游戏版本的所有内部实现完全一致。
+- `./gradlew build --no-daemon`：BUILD SUCCESSFUL。编译、资源处理、生产 jar 重映射和源码 jar 生成通过。
+- 没有自动测试（Gradle test 为 NO-SOURCE），没有实际启动客户端验收，也未确认所有其他模组的兼容性。
+- 用户报告现有 Carpet 在目标实例中正常运行。
+
+## 待完成：真实客户端验收
+
+在备份存档或新建的测试世界中进行：
+
+1. 安装主 jar，保留既有 Carpet；启动 Minecraft 1.21.1，检查日志无 Mixin 错误。
+2. 确认 `/mkf` 可用，`flippinBamboo` 默认 false；关闭时竹子仍正常种植。
+3. 执行 `/mkf flippinBamboo true`，保持 `/carpet flippinCactus false`：主手竹子可旋转方块，不消耗竹子。
+4. 覆盖观察者、未伸出的活塞、发射器、投掷器、楼梯、非双层台阶、原木、水平漏斗和铁轨；检查伸出的活塞、双层台阶、床不被不正确修改。
+5. 使用观察者和红石线路检查旋转不触发邻居/形状更新，与 Carpet 仙人掌行为对照；画面同步正常。
+6. 副手竹子放置活塞、观察者及漏斗，与副手仙人掌加 flippinCactus 的行为对照。
+7. 检查两个规则的四种开关组合：竹子与仙人掌独立控制；主副手、潜行、普通容器交互符合原 Carpet 行为。
+8. 冒险模式不能用主手旋转；关闭规则后普通交互恢复。
+9. `/mkf setDefault flippinBamboo true`，退出重进存档；换另一个未配置存档，确认规则没有跨存档泄漏。
+10. 带 TIS 等实际模组组合重复验收。
+
+## 版本核实的边界
+
+已取得 Mojang 1.21.1 更新公告页面，但工具返回正文被网站导航截断，未取得完整修复条目。因此未以公告证明“仅修复方块实体替换、其他性质不变”。当前兼容判断基于上游 TIS 的明确依赖配置、用户实际运行反馈，以及本项目编译结果。

@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "id": "carpet-mkf-addition",
+  "version": "${version}",
+  "name": "Carpet MKF Addition",
+  "description": "Personal Carpet extension with a bamboo wrench.",
+  "authors": [
+    "MikuFeather"
+  ],
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "dev.mikufeather.carpetmkf.MkfAddition"
+    ]
+  },
+  "mixins": [
+    "carpet-mkf-addition.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.18.4",
+    "minecraft": "1.21.1",
+    "java": ">=21",
+    "carpet": "=1.4.147+v240613"
+  }
+}

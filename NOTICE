@@ -1,0 +1,9 @@
+Gradle Wrapper (gradlew, gradlew.bat, gradle/wrapper/gradle-wrapper.jar)
+Copyright Gradle, Inc. and contributors.
+Licensed under the Apache License, Version 2.0.
+https://www.apache.org/licenses/LICENSE-2.0
+Obtained from gnembon/fabric-carpet tag 1.4.147.
+
+This extension calls Carpet Mod interfaces and helpers. Carpet is separately
+installed, not embedded. Carpet Mod: Copyright (c) 2020 gnembon, MIT License.
+https://github.com/gnembon/fabric-carpet/blob/1.4.147/LICENSE
