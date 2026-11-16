@@ -34,7 +34,7 @@ MikuFeather 的 Carpet 扩展，优先用于 Minecraft Java 版单人游戏。
 
 - 主手持 `minecraft:cactus` 右键：无更新旋转方块。
 - 观察者、发射器、投掷器、未伸出的普通／黏性活塞按固定顺序循环：**下→上→北→南→西→东→下**。每次右键前进一步，六次回到初始朝向；仅改变 facing 属性。
-- 其余方块沿用 Carpet 仙人掌扳手规则，伸出的活塞不旋转。
+- 铁轨改为下述实验性 shape 循环；其余方块沿用 Carpet 仙人掌扳手规则，伸出的活塞不旋转。
 - 副手持仙人掌：复用 Carpet 的反向放置判定。
 - 不需要开启 `/carpet flippinCactus true`，也不会改写这个全局规则。两者同时开启时，MKF 主手逻辑优先；关闭 MKF 后恢复由 Carpet 自身规则控制。
 - 不改变发射器内仙人掌的旋转功能。
@@ -44,13 +44,29 @@ MikuFeather 的 Carpet 扩展，优先用于 Minecraft Java 版单人游戏。
 
 本功能来自 Carpet 本体而非 TIS 独立实现。扩展通过小范围 Mixin 接入 `BlockRotator`，不复制上游代码，不替换 Minecraft 交互方法，避免与 Carpet 的交互 Redirect 冲突。该辅助类不是稳定 API，因此当前明确绑定 Carpet 1.4.147+v240613；升级须重新验证。
 
+## 铁轨形状循环（0.1.3-test.1 测试功能）
+
+开启 `mkfFlippinCactus` 后，主手持仙人掌右键铁轨，每次切换到下一个 shape。
+
+普通铁轨：
+
+```text
+north_south → east_west → ascending_east → ascending_west
+→ ascending_north → ascending_south → south_east → south_west
+→ north_west → north_east → north_south
+```
+
+动力、探测和激活铁轨只循环前六种，`ascending_south` 后回到 `north_south`。以方块实际允许的 shape 值判断是否支持转弯。
+
+仅修改 `shape`，保留 `powered`、`waterlogged` 等其余属性。沿用扳手的更新抑制和客户端同步方式，不主动调整相邻轨道的连接、不补齐坡道支撑。后续外部更新仍可能使铁轨重算形状或因缺少支撑掉落。
+
 ## 构建
 
 Windows：`gradlew.bat build`
 
 Git Bash / Linux：`./gradlew build`
 
-构建产物：`build/libs/carpet-mkf-addition-0.1.2.jar`。
+构建产物：`build/libs/carpet-mkf-addition-0.1.3-test.1.jar`。
 
 将构建产物放进目标实例的 `mods` 目录，保留对应 Carpet。不要把 `-sources.jar` 当成模组安装。
 
