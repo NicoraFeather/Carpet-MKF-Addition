@@ -3,7 +3,8 @@
   "package": "dev.mikufeather.carpetmkf.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
-    "BlockRotatorMixin"
+    "BlockRotatorMixin",
+    "SettingsManagerMixin"
   ],
   "injectors": {
     "defaultRequire": 1

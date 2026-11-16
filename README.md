@@ -14,6 +14,10 @@ MikuFeather 的 Carpet 扩展，优先用于 Minecraft Java 版单人游戏。
 
 编译使用 JDK 21 或更高版本；输出 Java 21 字节码。Gradle 在 JDK 25 上运行需要当前配置的 Gradle 9.2.1。
 
+## MKF 分类入口
+
+执行 `/carpet` 后，输出末尾出现可点击的 `[MKF]`，点击执行 `/mkf list MKF`，列出本扩展规则。也可直接执行 `/mkf` 浏览本扩展的分类。规则仍由独立设置管理器管理，配置保存在存档的 `mkf.conf`。
+
 ## 竹子扳手
 
 默认关闭，进入启用作弊的单人世界执行：
@@ -43,7 +47,7 @@ Windows：`gradlew.bat build`
 
 Git Bash / Linux：`./gradlew build`
 
-构建产物：`build/libs/carpet-mkf-addition-0.1.0.jar`。
+构建产物：`build/libs/carpet-mkf-addition-0.1.1.jar`。
 
 将构建产物放进目标实例的 `mods` 目录，保留对应 Carpet。不要把 `-sources.jar` 当成模组安装。
 
