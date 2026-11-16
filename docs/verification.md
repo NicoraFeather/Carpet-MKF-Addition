@@ -2,6 +2,8 @@
 
 ## 0.1.2：MKF 的仙人掌扳手
 
+用户反馈：功能没有问题，六方向仙人掌扳手实测通过。此反馈作为铁轨功能开发前的检查点。
+
 - `./gradlew build --no-daemon`：BUILD SUCCESSFUL，编译与生产重映射通过；未进行游戏实测。
 - 新规则：`/mkf mkfFlippinCactus true`。旧 `flippinBamboo` 已移除，需清理存档 `mkf.conf` 中的旧配置并重新 setDefault。
 - 待游戏确认：观察者、发射器、投掷器、未伸出的普通／黏性活塞各点击六次，按下→上→北→南→西→东→下循环并回到初始状态；其他状态属性保留。
