@@ -7,4 +7,7 @@ public final class MkfSettings {
     private MkfSettings() {}
     @Rule(categories = {RuleCategory.CREATIVE, RuleCategory.SURVIVAL, "MKF"})
     public static boolean mkfFlippinCactus = false;
+
+    @Rule(categories = {RuleCategory.SURVIVAL, "MKF"})
+    public static boolean fragileNetherPortal = false;
 }

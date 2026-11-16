@@ -4,7 +4,9 @@
   "compatibilityLevel": "JAVA_21",
   "mixins": [
     "BlockRotatorMixin",
-    "SettingsManagerMixin"
+    "SettingsManagerMixin",
+    "BlockStateBaseMixin",
+    "PlayerMixin"
   ],
   "injectors": {
     "defaultRequire": 1

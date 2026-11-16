@@ -60,13 +60,28 @@ north_south → east_west → ascending_east → ascending_west
 
 仅修改 `shape`，保留 `powered`、`waterlogged` 等其余属性。沿用扳手的更新抑制和客户端同步方式，不主动调整相邻轨道的连接、不补齐坡道支撑。后续外部更新仍可能使铁轨重算形状或因缺少支撑掉落。
 
+## 易碎下界传送门
+
+默认关闭：
+
+```mcfunction
+/mkf fragileNetherPortal true
+/mkf setDefault fragileNetherPortal true
+```
+
+开启后，`minecraft:nether_portal` 的硬度由 -1 改为 0.3，空手与任意工具都可挖掘。所有工具使用空手的基础挖掘速度，效率附魔不能加速；急迫、挖掘疲劳、水下和腾空等原版修正保留。关闭后立即恢复不可挖掘。
+
+保留原版无掉落行为（包括精准采集）。只改挖掘硬度，不改爆炸抗性、黑曜石框架和末地传送门。正常破坏会触发原版邻居更新，可能使整面传送门熄灭；本功能不是无更新破坏。创造模式仍遵循原版即时破坏和持剑限制。
+
+实现参考 Org 易碎黑曜石的动态硬度调整思路，独立实现，没有复制其源码。
+
 ## 构建
 
 Windows：`gradlew.bat build`
 
 Git Bash / Linux：`./gradlew build`
 
-构建产物：`build/libs/carpet-mkf-addition-0.1.3-test.1.jar`。
+构建产物：`build/libs/carpet-mkf-addition-0.2.0-test.1.jar`。
 
 将构建产物放进目标实例的 `mods` 目录，保留对应 Carpet。不要把 `-sources.jar` 当成模组安装。
 
