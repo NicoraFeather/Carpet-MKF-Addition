@@ -19,12 +19,12 @@ public final class MkfAddition implements ModInitializer, CarpetExtension {
     @Override public String version() { return ID; }
     @Override public Map<String, String> canHasTranslations(String lang) {
         if ("zh_cn".equals(lang)) return Map.of(
-                "mkf.rule.flippinBamboo.name", "竹子扳手",
-                "mkf.rule.flippinBamboo.desc", "主手持竹子右键无更新旋转方块；副手持竹子反向放置方块。",
-                "mkf.rule.flippinBamboo.extra.0", "复用 Carpet 1.4.147 的仙人掌扳手逻辑，不要求开启 flippinCactus。");
+                "mkf.rule.mkfFlippinCactus.name", "MKF 的仙人掌扳手",
+                "mkf.rule.mkfFlippinCactus.desc", "主手持仙人掌无更新旋转方块；观察者、发射器、投掷器和未伸出的活塞循环六个朝向。",
+                "mkf.rule.mkfFlippinCactus.extra.0", "朝向顺序：下→上→北→南→西→东→下。副手仙人掌反向放置；不要求开启 flippinCactus。");
         return Map.of(
-                "mkf.rule.flippinBamboo.name", "Bamboo wrench",
-                "mkf.rule.flippinBamboo.desc", "Use bamboo to rotate blocks without updates; offhand bamboo reverses placement.",
-                "mkf.rule.flippinBamboo.extra.0", "Uses Carpet 1.4.147 rotation logic independently of flippinCactus.");
+                "mkf.rule.mkfFlippinCactus.name", "MKF's cactus wrench",
+                "mkf.rule.mkfFlippinCactus.desc", "Rotate blocks without updates; observers, dispensers, droppers and retracted pistons cycle six directions.",
+                "mkf.rule.mkfFlippinCactus.extra.0", "Order: down, up, north, south, west, east. Offhand cactus reverses placement; independent of flippinCactus.");
     }
 }

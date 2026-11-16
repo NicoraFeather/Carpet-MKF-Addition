@@ -1,5 +1,14 @@
 # 验证记录与游戏验收
 
+## 0.1.2：MKF 的仙人掌扳手
+
+- `./gradlew build --no-daemon`：BUILD SUCCESSFUL，编译与生产重映射通过；未进行游戏实测。
+- 新规则：`/mkf mkfFlippinCactus true`。旧 `flippinBamboo` 已移除，需清理存档 `mkf.conf` 中的旧配置并重新 setDefault。
+- 待游戏确认：观察者、发射器、投掷器、未伸出的普通／黏性活塞各点击六次，按下→上→北→南→西→东→下循环并回到初始状态；其他状态属性保留。
+- 待游戏确认：伸出活塞不旋转，其他方块保持 Carpet 原有扳手行为；无更新特性及容器内容保留。
+- 待游戏确认：主手／副手仙人掌生效，竹子恢复普通用途；MKF 与 Carpet flippinCactus 两个规则的四种组合符合 README 描述。
+- 下方记录为 0.1.0／0.1.1 历史版本验证，旧命令不适用于 0.1.2。
+
 ## 已完成
 
 - 核对 Carpet tag 1.4.147 的 `CarpetExtension`、`SettingsManager` 和 `BlockRotator` 接口。
