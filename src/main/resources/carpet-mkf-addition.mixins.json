@@ -6,7 +6,9 @@
     "BlockRotatorMixin",
     "SettingsManagerMixin",
     "BlockStateBaseMixin",
-    "PlayerMixin"
+    "PlayerMixin",
+    "BlockMixin",
+    "NetherPortalBlockMixin"
   ],
   "injectors": {
     "defaultRequire": 1

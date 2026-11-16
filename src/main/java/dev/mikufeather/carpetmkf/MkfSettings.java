@@ -10,4 +10,7 @@ public final class MkfSettings {
 
     @Rule(categories = {RuleCategory.SURVIVAL, "MKF"})
     public static boolean fragileNetherPortal = false;
+
+    @Rule(categories = {RuleCategory.SURVIVAL, "MKF"}, options = {"0", "1", "2"}, strict = true)
+    public static int toughNetherPortal = 0;
 }
