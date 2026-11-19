@@ -8,7 +8,8 @@
     "BlockStateBaseMixin",
     "PlayerMixin",
     "BlockMixin",
-    "NetherPortalBlockMixin"
+    "NetherPortalBlockMixin",
+    "MinecraftServerProfileMixin"
   ],
   "injectors": {
     "defaultRequire": 1

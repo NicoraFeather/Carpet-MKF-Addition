@@ -111,6 +111,32 @@ north_south → east_west → ascending_east → ascending_west
 
 反向不产经验，但将粗矿再次烧成锭仍获得原版经验，因此允许消耗燃料循环获取经验。三条配方由本模组的 `reverse_smelting` 序列化器加载，配方ID为 `carpet-mkf-addition:raw_gold_from_ingot`、`raw_iron_from_ingot`、`raw_copper_from_ingot`，不覆盖原版配方。
 
+## MSPT / TPS 记录器
+
+```mcfunction
+/mkfprofile start
+/mkfprofile mark 启动机器
+/mkfprofile mark 停止机器
+/mkfprofile stop
+```
+
+需要2级命令权限；start必须由玩家执行，会订阅（不是切换）该玩家的log tps，stop不退订。全服同时一份记录，每个已完成服务端刻采样一次，使用主世界gameTime作为绝对世界刻，另存dayTime、服务端刻序号及单调时钟经过时间。mark后必须有空格，message支持空格，最多512字符。
+
+停止后在游戏实例目录 `mkf-reports/mspt/<时间-唯一编号>/` 后台生成：
+
+- `samples.csv`：原始采样，UTF-8 BOM，含单刻耗时、原版100刻平均MSPT、与/log tps同公式的TPS、目标TPS、累计处理耗时、冻结/冲刺状态。
+- `marks.csv`：标记表，兼容CSV引号和换行，防止标记开头的公式字符在电子表格中执行。
+- `capture.json`：完整原始记录及元信息。
+- `chart.html`：单文件离线交互图表，不依赖CDN或网络。
+
+图表支持MSPT/TPS多选、原版平均线、标记开关、多选横轴并列显示（绝对世界刻、相对世界刻、MSPT积分、实际经过毫秒）；滚轮缩放、拖动选择、双击恢复全局，也能输入样本序号区间或点击标记定位。显示全局及区间的平均单刻MSPT、平均Carpet TPS、平均线均值、峰值、累计耗时及实际采样吞吐率。
+
+**MSPT积分是累计CPU侧刻处理耗时，不含等待时间，并非真实经过时间。** 实际经过时间另外记录。世界冻结时gameTime可能重复，显示的TPS是Carpet推算值，不是墙钟计数；平均TPS按每个样本等权计算。单刻计时沿用原版边界，采样本身发生在原版计时之后；记录器仍会产生一定开销。
+
+采样上限200000、标记上限10000，内存缓冲后导出；达到上限或正常退出存档自动保存。崩溃或强制结束进程可能丢失未停止的记录，不提供崩溃恢复。报告生成工作线程不阻塞游戏主线程，日志中也会记录输出路径。
+
+运行 `./gradlew generateProfileSimulation` 可生成固定随机种子的4800刻仿真报告，涵盖负载变化、尖峰、冻结、冲刺及目标刻率切换，不代表游戏实测性能。
+
 ## 构建
 
 Windows：`gradlew.bat build`
@@ -119,7 +145,7 @@ Git Bash / Linux：`./gradlew build`
 
 构建会运行 `verifyReverseSmelting`：用实际 Minecraft 1.21.1 配方实现读取三条JSON配方，检查开关、缓存ID重查、产物、时间、经验及配方类型。它是无世界的Java验证程序，不替代客户端验收；也可执行 `./gradlew verifyReverseSmelting` 单独运行。
 
-构建产物：`build/libs/carpet-mkf-addition-0.4.0-test.1.jar`。
+构建产物：`build/libs/carpet-mkf-addition-0.5.0-test.1.jar`。
 
 将构建产物放进目标实例的 `mods` 目录，保留对应 Carpet。不要把 `-sources.jar` 当成模组安装。
 

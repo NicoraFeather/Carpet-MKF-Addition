@@ -18,6 +18,13 @@ public final class MkfAddition implements ModInitializer, CarpetExtension {
         ReverseSmeltingRecipe.register();
         CarpetServer.manageExtension(this);
     }
+    @Override public void registerCommands(com.mojang.brigadier.CommandDispatcher<net.minecraft.commands.CommandSourceStack> dispatcher,
+            net.minecraft.commands.CommandBuildContext context) {
+        dev.mikufeather.carpetmkf.profile.MsptProfiler.register(dispatcher);
+    }
+    @Override public void onServerClosed(net.minecraft.server.MinecraftServer server) {
+        dev.mikufeather.carpetmkf.profile.MsptProfiler.onServerClosed(server);
+    }
     @Override public void onGameStarted() { settings.parseSettingsClass(MkfSettings.class); }
     @Override public SettingsManager extensionSettingsManager() { return settings; }
     @Override public String version() { return ID; }

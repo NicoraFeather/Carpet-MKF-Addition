@@ -38,3 +38,10 @@ tasks.register('verifyReverseSmelting', JavaExec) {
 // The test source is an executable Minecraft bootstrap check, not a JUnit class.
 tasks.named('test') { failOnNoDiscoveredTests = false }
 tasks.named('check') { dependsOn 'verifyReverseSmelting' }
+
+tasks.register('generateProfileSimulation', JavaExec) {
+    group = 'verification'
+    dependsOn testClasses
+    classpath = sourceSets.test.runtimeClasspath
+    mainClass = 'dev.mikufeather.carpetmkf.profile.ProfileSimulation'
+}
