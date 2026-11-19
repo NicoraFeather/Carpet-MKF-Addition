@@ -1,0 +1,1 @@
+{"mode":"long","startWorldTick":100000,"totals":{"count":1200000,"sumMspt":4.2E7,"sumTps":9.904761904478073E7,"sumAverage":4.2E7,"maxMspt":70.0,"overBudget":400000,"frozen":0,"sprinting":0},"elapsedMs":6.0E7,"phase":"满负载 \u003c/script\u003e","reason":"simulation_complete"}
