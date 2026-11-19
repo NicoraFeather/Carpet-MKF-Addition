@@ -137,6 +137,25 @@ north_south → east_west → ascending_east → ascending_west
 
 运行 `./gradlew generateProfileSimulation` 可生成固定随机种子的4800刻仿真报告，涵盖负载变化、尖峰、冻结、冲刺及目标刻率切换，不代表游戏实测性能。
 
+## 长期挂机模式（0.6.0-test.1）
+
+```mcfunction
+/mkfprofile start long
+/mkfprofile mark 空载测试
+/mkfprofile mark 开启机器
+/mkfprofile stop
+```
+
+原来的start或start detail仍是20万刻上限的逐刻详细模式。长期模式没有固定刻数上限，以long计数，逐刻累计原始MSPT/TPS总和、峰值、超预算刻、冻结和冲刺刻；不保存全部逐刻样本。全局平均值和图表降采样无关，始终按原始样本数加权。
+
+每1200个服务端刻，或采样观察到距上次分段经过60秒时，将当前段保存。mark会结束当前段，后续段以该标记作为阶段名（相邻同名阶段合并展示）。输出buckets.csv、buckets.jsonl、marks.jsonl及summary.json；正常stop/退出后生成长期chart.html，提供全局均值、阶段对照、整段区间加权均值和低频趋势。长期模式不支持段内逐刻回溯，完整的多横轴交互仍由详细模式提供。
+
+统计快照使用临时文件加原子替换（文件系统不支持时退回替换）。写盘采用单后台线程、有界队列；队列满或I/O失败会停止记录并提示，避免阻塞游戏线程及无声丢数据。崩溃后可检查最近summary.json和已写入汇总，但各文件不保证跨文件事务一致；不自动续接旧会话。游戏主线程完全停顿时无法按墙钟定时采样或保存。
+
+录制阶段内存基本固定（只保留累计值、当前桶和最多8项写盘任务），停止生成HTML时会在后台读取所有汇总段，超长记录的最终报告仍会随汇总段数增长。没有固定上限不代表无限磁盘空间或零开销。
+
+`./gradlew verifyLongProfile` 运行120万刻（50游戏日）仿真并检查全局总和与汇总段计数，不启动Minecraft。
+
 ## 构建
 
 Windows：`gradlew.bat build`
@@ -145,7 +164,7 @@ Git Bash / Linux：`./gradlew build`
 
 构建会运行 `verifyReverseSmelting`：用实际 Minecraft 1.21.1 配方实现读取三条JSON配方，检查开关、缓存ID重查、产物、时间、经验及配方类型。它是无世界的Java验证程序，不替代客户端验收；也可执行 `./gradlew verifyReverseSmelting` 单独运行。
 
-构建产物：`build/libs/carpet-mkf-addition-0.5.0-test.1.jar`。
+构建产物：`build/libs/carpet-mkf-addition-0.6.0-test.1.jar`。
 
 将构建产物放进目标实例的 `mods` 目录，保留对应 Carpet。不要把 `-sources.jar` 当成模组安装。
 

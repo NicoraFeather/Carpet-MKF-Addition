@@ -39,6 +39,13 @@ tasks.register('verifyReverseSmelting', JavaExec) {
 tasks.named('test') { failOnNoDiscoveredTests = false }
 tasks.named('check') { dependsOn 'verifyReverseSmelting' }
 
+tasks.register('verifyLongProfile', JavaExec) {
+    group = 'verification'
+    dependsOn testClasses
+    classpath = sourceSets.test.runtimeClasspath
+    mainClass = 'dev.mikufeather.carpetmkf.profile.LongProfileVerification'
+}
+
 tasks.register('generateProfileSimulation', JavaExec) {
     group = 'verification'
     dependsOn testClasses

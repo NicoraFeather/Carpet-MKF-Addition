@@ -40,18 +40,23 @@ public final class MsptProfiler {
         final List<Sample> samples = new ArrayList<>();
         final List<Mark> marks = new ArrayList<>();
         double cumulative;
+        final LongTermProfile longTerm;
 
-        Session(CommandSourceStack owner) {
+        Session(CommandSourceStack owner, boolean longMode) {
             this.owner = owner;
             server = owner.getServer();
             startWorldTick = server.overworld().getGameTime();
+            longTerm = longMode ? new LongTermProfile(FabricLoader.getInstance().getGameDir()
+                    .resolve("mkf-reports/mspt"), startWorldTick) : null;
         }
     }
 
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
         dispatcher.register(Commands.literal("mkfprofile")
                 .requires(source -> source.hasPermission(2))
-                .then(Commands.literal("start").executes(context -> start(context.getSource())))
+                .then(Commands.literal("start").executes(context -> start(context.getSource(), false))
+                        .then(Commands.literal("long").executes(context -> start(context.getSource(), true)))
+                        .then(Commands.literal("detail").executes(context -> start(context.getSource(), false))))
                 .then(Commands.literal("mark")
                         .then(Commands.argument("message", StringArgumentType.greedyString())
                                 .executes(context -> mark(context.getSource(),
@@ -59,7 +64,7 @@ public final class MsptProfiler {
                 .then(Commands.literal("stop").executes(context -> stop(context.getSource()))));
     }
 
-    private static int start(CommandSourceStack source) {
+    private static int start(CommandSourceStack source, boolean longMode) {
         if (active != null) {
             source.sendFailure(Component.literal("已有记录正在进行，请先执行 /mkfprofile stop。"));
             return 0;
@@ -70,8 +75,10 @@ public final class MsptProfiler {
         }
         // Subscribe rather than toggle: an existing subscription must stay enabled.
         LoggerRegistry.subscribePlayer(player.getScoreboardName(), "tps", null);
-        active = new Session(source);
-        source.sendSuccess(() -> Component.literal("MSPT记录已开始，已订阅log tps；最多200000个服务端刻，退出存档自动保存。"), false);
+        active = new Session(source, longMode);
+        source.sendSuccess(() -> Component.literal(longMode
+                ? "长期记录已开始，无固定刻数上限；每1200刻或60秒落盘，mark划分阶段，已订阅log tps。"
+                : "详细记录已开始，最多200000个服务端刻；长时间挂机请用 /mkfprofile start long。"), false);
         return 1;
     }
 
@@ -80,11 +87,13 @@ public final class MsptProfiler {
             source.sendFailure(Component.literal("当前没有记录。"));
             return 0;
         }
-        if (message.length() > 512 || active.marks.size() >= 10_000) {
+        if (message.length() > 512 || (active.longTerm != null
+                ? !active.longTerm.canMark() : active.marks.size() >= 10_000)) {
             source.sendFailure(Component.literal("标记最多512字符，每次记录最多10000个标记。"));
             return 0;
         }
-        active.marks.add(new Mark(active.samples.size(), active.server.overworld().getGameTime(), message));
+        if (active.longTerm != null) active.longTerm.mark(message);
+        else active.marks.add(new Mark(active.samples.size(), active.server.overworld().getGameTime(), message));
         source.sendSuccess(() -> Component.literal("已添加标记：" + message), false);
         return 1;
     }
@@ -109,6 +118,17 @@ public final class MsptProfiler {
         double tps = rate.isFrozen() ? 0 : 1000.0 / Math.max(
                 rate.isSprinting() ? 0 : rate.millisecondsPerTick(), average);
         if (!Double.isFinite(tps)) tps = 0;
+        if (session.longTerm != null) {
+            if (session.longTerm.failure() != null) {
+                LOG.error("Long-term profile writer failed", session.longTerm.failure());
+                finish("io_failure", session.owner);
+                return;
+            }
+            session.longTerm.add(server.overworld().getGameTime(),
+                    (System.nanoTime() - session.startNanos) / 1_000_000.0,
+                    mspt, average, tps, target, rate.isFrozen(), rate.isSprinting());
+            return;
+        }
         session.cumulative += mspt;
         session.samples.add(new Sample(session.samples.size(), tick, server.overworld().getGameTime(),
                 server.overworld().getDayTime(), (System.nanoTime() - session.startNanos) / 1_000_000.0,
@@ -123,6 +143,19 @@ public final class MsptProfiler {
     private static void finish(String reason, CommandSourceStack notify) {
         Session session = active;
         active = null;
+        if (session.longTerm != null) {
+            if (notify != null) notify.sendSuccess(() -> Component.literal("长期记录结束，共"
+                    + session.longTerm.count() + "个样本，正在汇总；log tps保持开启。"), false);
+            session.longTerm.finish(reason).whenComplete((path, error) -> {
+                if (error != null) LOG.error("Unable to export long-term report", error);
+                else LOG.info("Long-term profile saved: {}", path);
+                if (notify != null && !session.server.isStopped()) session.server.execute(() -> {
+                    if (error != null) notify.sendFailure(Component.literal("长期导出失败，已落盘检查点仍在报告目录，请查看日志。"));
+                    else notify.sendSuccess(() -> Component.literal("长期报告已保存：" + path.toAbsolutePath()), false);
+                });
+            });
+            return;
+        }
         Capture capture = new Capture("MKF MSPT Profile", session.startWorldTick,
                 List.copyOf(session.samples), List.copyOf(session.marks), reason, false);
         Path base = FabricLoader.getInstance().getGameDir().resolve("mkf-reports/mspt");
