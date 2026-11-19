@@ -27,3 +27,14 @@ java {
     targetCompatibility = JavaVersion.VERSION_21
     withSourcesJar()
 }
+
+tasks.register('verifyReverseSmelting', JavaExec) {
+    group = 'verification'
+    description = 'Verify reverse recipe data, rule toggles and cached recipe ID matching against Minecraft 1.21.1.'
+    dependsOn testClasses
+    classpath = sourceSets.test.runtimeClasspath
+    mainClass = 'dev.mikufeather.carpetmkf.recipe.ReverseSmeltingVerification'
+}
+// The test source is an executable Minecraft bootstrap check, not a JUnit class.
+tasks.named('test') { failOnNoDiscoveredTests = false }
+tasks.named('check') { dependsOn 'verifyReverseSmelting' }

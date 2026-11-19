@@ -13,4 +13,7 @@ public final class MkfSettings {
 
     @Rule(categories = {RuleCategory.SURVIVAL, "MKF"}, options = {"0", "1", "2"}, strict = true)
     public static int toughNetherPortal = 0;
+
+    @Rule(categories = {RuleCategory.SURVIVAL, "MKF"})
+    public static boolean reversibleFurnace = false;
 }

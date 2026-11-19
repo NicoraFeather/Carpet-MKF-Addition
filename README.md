@@ -96,13 +96,30 @@ north_south → east_west → ascending_east → ascending_west
 
 与 `fragileNetherPortal` 独立，可同时开启：硬度0.3便于手挖，爆炸抗性1200，并能逐块拆门而不连锁熄灭。
 
+## 可逆熔炉
+
+默认关闭，开启或在当前存档持久开启：
+
+```mcfunction
+/mkf reversibleFurnace true
+/mkf setDefault reversibleFurnace true
+```
+
+普通熔炉新增三条独立配方：金锭→粗金、铁锭→粗铁、铜锭→粗铜，均为1:1、每件200游戏刻（20 TPS时10秒）、正常消耗燃料，反向配方经验为0。高炉、烟熏炉不支持这些反向配方，原版粗矿烧锭配方不变。
+
+规则在配方匹配时检查，包括熔炉缓存的配方。关闭后不能继续完成反向烧制；已产出的粗矿保留，输入锭不丢失。熔炉未完成进度按原版处理；已经点燃的燃料仍会继续计时消耗，规则关闭不返还燃料。输出槽满或物品不兼容时按原版停止烧制，支持正常漏斗输入输出及存档保存。
+
+反向不产经验，但将粗矿再次烧成锭仍获得原版经验，因此允许消耗燃料循环获取经验。三条配方由本模组的 `reverse_smelting` 序列化器加载，配方ID为 `carpet-mkf-addition:raw_gold_from_ingot`、`raw_iron_from_ingot`、`raw_copper_from_ingot`，不覆盖原版配方。
+
 ## 构建
 
 Windows：`gradlew.bat build`
 
 Git Bash / Linux：`./gradlew build`
 
-构建产物：`build/libs/carpet-mkf-addition-0.3.0-test.1.jar`。
+构建会运行 `verifyReverseSmelting`：用实际 Minecraft 1.21.1 配方实现读取三条JSON配方，检查开关、缓存ID重查、产物、时间、经验及配方类型。它是无世界的Java验证程序，不替代客户端验收；也可执行 `./gradlew verifyReverseSmelting` 单独运行。
+
+构建产物：`build/libs/carpet-mkf-addition-0.4.0-test.1.jar`。
 
 将构建产物放进目标实例的 `mods` 目录，保留对应 Carpet。不要把 `-sources.jar` 当成模组安装。
 

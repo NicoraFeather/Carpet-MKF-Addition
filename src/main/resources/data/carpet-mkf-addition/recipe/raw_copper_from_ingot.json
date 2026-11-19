@@ -1,0 +1,13 @@
+{
+  "type": "carpet-mkf-addition:reverse_smelting",
+  "category": "misc",
+  "ingredient": {
+    "item": "minecraft:copper_ingot"
+  },
+  "result": {
+    "id": "minecraft:raw_copper",
+    "count": 1
+  },
+  "experience": 0,
+  "cookingtime": 200
+}
