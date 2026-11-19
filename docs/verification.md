@@ -2,6 +2,8 @@
 
 ## 0.3.0-test.1：坚韧的下界传送门
 
+用户反馈：测试通过。作为可逆熔炉功能开发前检查点。
+
 - 开发前检查点65a3d2d，记录易碎下界传送门用户验收通过。
 - 新增整数规则toughNetherPortal，严格选项0/1/2，默认0。
 - 1/2档通过Block.getExplosionResistance仅为下界传送门返回1200；2档在NetherPortalBlock.updateShape保留原状态，防止不完整传送门连锁消失。
