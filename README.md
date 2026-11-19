@@ -1,5 +1,9 @@
 # Carpet MKF Addition
 
+## 0.6.3-test.1：滑动平均指标（优先于下文历史说明）
+
+HTML长短报告仅展示原版最近最多100刻的滑动平均MSPT及其倒数TPS，TPS不封顶、冻结不归零。平均MSPT、最大MSPT均基于该滑动平均序列；平均TPS为各滑动平均值倒数的算术平均。详细CSV仍保留tick_mspt诊断原始耗时，TPS列改为rolling_derived_tps；长期模式直接累计滑动平均样本，汇总最大值也是滑动平均最大值。旧版报告不会自动改变。滑动窗口可能含开始记录之前的最多99刻，这是原版窗口的自然行为。
+
 ## 0.6.2-test.1 图表显示修正
 
 详细和长期报告均明确标注左轴MSPT / ms、右轴推算TPS，使用规整真实数值刻度；长期趋势不再归一化。详细报告悬停显示竖向辅助线和实际数据点，提示中的平均线明确命名为100刻滑动平均MSPT。此版本不改变采样和统计公式，旧HTML不会自动更新，请使用新生成的报告。
@@ -174,7 +178,7 @@ Git Bash / Linux：`./gradlew build`
 
 构建会运行 `verifyReverseSmelting`：用实际 Minecraft 1.21.1 配方实现读取三条JSON配方，检查开关、缓存ID重查、产物、时间、经验及配方类型。它是无世界的Java验证程序，不替代客户端验收；也可执行 `./gradlew verifyReverseSmelting` 单独运行。
 
-构建产物：`build/libs/carpet-mkf-addition-0.6.2-test.1.jar`。
+构建产物：`build/libs/carpet-mkf-addition-0.6.3-test.1.jar`。
 
 将构建产物放进目标实例的 `mods` 目录，保留对应 Carpet。不要把 `-sources.jar` 当成模组安装。
 

@@ -13,7 +13,7 @@ import java.util.concurrent.*;
 public final class LongTermProfile {
     public static final int BUCKET_SIZE = 1200;
     private static final Gson JSON = new Gson();
-    private static final String HEADER = "first_sample,last_sample,world_start,world_end,count,sum_mspt,sum_derived_tps,sum_average_mspt,max_mspt,over_budget,frozen,sprinting,elapsed_start_ms,elapsed_end_ms,phase\r\n";
+    private static final String HEADER = "first_sample,last_sample,world_start,world_end,count,sum_rolling_mspt,sum_rolling_derived_tps,sum_average_mspt,max_rolling_mspt,over_budget,frozen,sprinting,elapsed_start_ms,elapsed_end_ms,phase\r\n";
     public record Totals(long count, double sumMspt, double sumTps, double sumAverage,
                          double maxMspt, long overBudget, long frozen, long sprinting) {}
     public record Bucket(long first, long last, long worldStart, long worldEnd, Totals totals,

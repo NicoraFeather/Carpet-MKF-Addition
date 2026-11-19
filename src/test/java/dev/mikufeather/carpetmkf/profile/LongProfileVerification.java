@@ -12,11 +12,17 @@ public final class LongProfileVerification {
         profile.awaitCheckpoint();
         double expected = 0;
         double expectedTps = 0;
+        var window = new java.util.ArrayDeque<Double>();
+        double windowSum = 0;
         for (int i = 0; i < 1_200_000; i++) {
             double ms = i < 400_000 ? 5 : i < 800_000 ? 30 : 70;
-            expected += ms;
-            expectedTps += 1000 / ms;
-            profile.add(100001L+i, (i+1)*50.0, ms, ms, 1000/ms, 20, false, false);
+            window.addLast(ms);
+            windowSum += ms;
+            if (window.size() > 100) windowSum -= window.removeFirst();
+            double rolling = windowSum / window.size();
+            expected += rolling;
+            expectedTps += 1000 / rolling;
+            profile.add(100001L+i, (i+1)*50.0, rolling, rolling, 1000/rolling, 20, false, false);
             if (i == 399_999) profile.mark("机器开启");
             if (i == 799_999) profile.mark("满负载 </script>");
             // Simulate real spacing: do not flood the intentionally bounded I/O queue.

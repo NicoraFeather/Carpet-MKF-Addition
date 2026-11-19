@@ -115,7 +115,7 @@ public final class MsptProfiler {
         double average = server.getAverageTickTimeNanos() / 1_000_000.0;
         var rate = server.tickRateManager();
         double target = rate.tickrate();
-        double tps = mspt > 0 ? 1000.0 / mspt : 0;
+        double tps = average > 0 ? 1000.0 / average : 0;
         if (!Double.isFinite(tps)) tps = 0;
         if (session.longTerm != null) {
             if (session.longTerm.failure() != null) {
@@ -125,7 +125,7 @@ public final class MsptProfiler {
             }
             session.longTerm.add(server.overworld().getGameTime(),
                     (System.nanoTime() - session.startNanos) / 1_000_000.0,
-                    mspt, average, tps, target, rate.isFrozen(), rate.isSprinting());
+                    average, average, tps, target, rate.isFrozen(), rate.isSprinting());
             return;
         }
         session.cumulative += mspt;
