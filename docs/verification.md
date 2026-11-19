@@ -2,6 +2,8 @@
 
 ## 0.6.3-test.1：只展示滑动平均
 
+用户确认：MSPT/TPS记录功能可以定稿。此确认仅针对性能记录器；可逆熔炉仍保持此前“暂未测试”的记录。
+
 - 开发前提交ad4946c保存既有仿真产物。详细图只读取averageMspt，移除单刻曲线及其提示，统计平均/最大均基于滑动平均；采样TPS改为1000/average，长期累计相同指标。详细CSV仍保留原始单刻耗时。
 - build、generateProfileSimulation及120万刻verifyLongProfile通过；长期仿真用100刻滑动窗口重新计算，验证累计MSPT及TPS总和。没有本版浏览器和游戏验收。
 
