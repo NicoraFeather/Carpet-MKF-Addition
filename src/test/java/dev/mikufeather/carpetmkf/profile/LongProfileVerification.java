@@ -11,10 +11,12 @@ public final class LongProfileVerification {
         var profile = new LongTermProfile(base, 100000);
         profile.awaitCheckpoint();
         double expected = 0;
+        double expectedTps = 0;
         for (int i = 0; i < 1_200_000; i++) {
             double ms = i < 400_000 ? 5 : i < 800_000 ? 30 : 70;
             expected += ms;
-            profile.add(100001L+i, (i+1)*50.0, ms, ms, Math.min(20, 1000/ms), 20, false, false);
+            expectedTps += 1000 / ms;
+            profile.add(100001L+i, (i+1)*50.0, ms, ms, 1000/ms, 20, false, false);
             if (i == 399_999) profile.mark("机器开启");
             if (i == 799_999) profile.mark("满负载 </script>");
             // Simulate real spacing: do not flood the intentionally bounded I/O queue.
@@ -26,6 +28,7 @@ public final class LongProfileVerification {
         var totals = json.getAsJsonObject("totals");
         if (totals.get("count").getAsLong() != 1_200_000) throw new AssertionError("count");
         if (Math.abs(totals.get("sumMspt").getAsDouble() - expected) > 0.001) throw new AssertionError("sum");
+        if (Math.abs(totals.get("sumTps").getAsDouble() - expectedTps) > 0.01) throw new AssertionError("TPS sum");
         if (Files.readString(report).contains("</script>\"")) throw new AssertionError("escaping");
         long count;
         try(var lines = Files.lines(report.resolveSibling("buckets.jsonl"))) {

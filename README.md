@@ -1,5 +1,11 @@
 # Carpet MKF Addition
 
+## 0.6.1-test.1 统计口径更新（优先于下文旧版描述）
+
+长短记录统一每刻 `TPS = 1000 / 单刻MSPT`，不以20或目标刻率封顶，冻结时仍正常计算；它是处理能力推算值，不是实际运行刻率。平均TPS为逐刻推算值的算术平均，不是1000除以平均MSPT。零耗时无法求倒数，防御性记为0。游戏内原版Carpet的 `/log tps` 显示不改。
+
+HTML统计仅显示平均MSPT、最大MSPT、平均TPS；详细报告横轴只保留绝对／相对世界刻（可多选），长期汇总报告也支持这两种世界刻横轴切换。移除HTML中的累计处理和实际经过毫秒轴及多余统计，底层CSV/JSON仍保留计时及状态元数据供分析。长期区间仍以完整汇总段加权。
+
 MikuFeather 的 Carpet 扩展，优先用于 Minecraft Java 版单人游戏。
 
 ## 环境
@@ -164,7 +170,7 @@ Git Bash / Linux：`./gradlew build`
 
 构建会运行 `verifyReverseSmelting`：用实际 Minecraft 1.21.1 配方实现读取三条JSON配方，检查开关、缓存ID重查、产物、时间、经验及配方类型。它是无世界的Java验证程序，不替代客户端验收；也可执行 `./gradlew verifyReverseSmelting` 单独运行。
 
-构建产物：`build/libs/carpet-mkf-addition-0.6.0-test.1.jar`。
+构建产物：`build/libs/carpet-mkf-addition-0.6.1-test.1.jar`。
 
 将构建产物放进目标实例的 `mods` 目录，保留对应 Carpet。不要把 `-sources.jar` 当成模组安装。
 

@@ -18,7 +18,7 @@ public final class ProfileReport {
         Files.createDirectories(base);
         String name = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss"));
         Path directory = Files.createTempDirectory(base, name + "-");
-        StringBuilder csv = new StringBuilder("\uFEFFsample_index,server_tick,world_tick,relative_tick,day_time,elapsed_ms,tick_mspt,carpet_average_mspt,carpet_tps,target_tps,cumulative_processing_ms,frozen,sprinting\r\n");
+        StringBuilder csv = new StringBuilder("\uFEFFsample_index,server_tick,world_tick,relative_tick,day_time,elapsed_ms,tick_mspt,carpet_average_mspt,derived_tps,target_tps,cumulative_processing_ms,frozen,sprinting\r\n");
         for (var s : capture.samples()) {
             csv.append(s.index()).append(',').append(s.serverTick()).append(',').append(s.worldTick()).append(',')
                     .append(s.worldTick() - capture.startWorldTick()).append(',').append(s.dayTime()).append(',')

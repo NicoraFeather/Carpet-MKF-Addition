@@ -25,7 +25,7 @@ public final class ProfileSimulation {
             window.addLast(ms); sum += ms;
             if (window.size() > 100) sum -= window.removeFirst();
             double average = sum / window.size();
-            double tps = frozen ? 0 : 1000 / Math.max(sprint ? 0 : 1000 / target, average);
+            double tps = 1000 / ms;
             cumulative += ms; elapsed += sprint ? ms : Math.max(ms, 1000 / target);
             if (!frozen) world++;
             samples.add(new MsptProfiler.Sample(i, 10_000+i, world, world % 24_000,

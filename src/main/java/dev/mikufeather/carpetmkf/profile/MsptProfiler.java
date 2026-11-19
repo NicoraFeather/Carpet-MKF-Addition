@@ -115,8 +115,7 @@ public final class MsptProfiler {
         double average = server.getAverageTickTimeNanos() / 1_000_000.0;
         var rate = server.tickRateManager();
         double target = rate.tickrate();
-        double tps = rate.isFrozen() ? 0 : 1000.0 / Math.max(
-                rate.isSprinting() ? 0 : rate.millisecondsPerTick(), average);
+        double tps = mspt > 0 ? 1000.0 / mspt : 0;
         if (!Double.isFinite(tps)) tps = 0;
         if (session.longTerm != null) {
             if (session.longTerm.failure() != null) {
